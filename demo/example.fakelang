@@ -1,0 +1,23 @@
+// Fakelang demo: classes, inheritance, and virtual dispatch
+class Animal {
+  // Virtual method in base class
+  virtual speak(): String {
+    return "Animal";
+  }
+}
+
+class Dog extends Animal {
+  // Override of virtual method
+  override speak(): String {
+    return "Woof";
+  }
+}
+
+function main(): Int {
+  var a: Animal = new Animal();
+  var d: Animal = new Dog();
+  print(a.speak());
+  print(d.speak());
+  return 0;
+}
+

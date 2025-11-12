@@ -1,0 +1,5 @@
+if(EXISTS "/Users/samcaldwell/git/champlain/csci-430-llvm-ir/build/fakelang_tests[1]_tests.cmake")
+  include("/Users/samcaldwell/git/champlain/csci-430-llvm-ir/build/fakelang_tests[1]_tests.cmake")
+else()
+  add_test(fakelang_tests_NOT_BUILT fakelang_tests_NOT_BUILT)
+endif()

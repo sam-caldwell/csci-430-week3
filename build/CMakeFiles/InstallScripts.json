@@ -1,0 +1,10 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/samcaldwell/git/champlain/csci-430-llvm-ir/build/cmake_install.cmake",
+		"/Users/samcaldwell/git/champlain/csci-430-llvm-ir/build/_deps/googletest-build/cmake_install.cmake",
+		"/Users/samcaldwell/git/champlain/csci-430-llvm-ir/build/_deps/googletest-build/googlemock/cmake_install.cmake",
+		"/Users/samcaldwell/git/champlain/csci-430-llvm-ir/build/_deps/googletest-build/googletest/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
