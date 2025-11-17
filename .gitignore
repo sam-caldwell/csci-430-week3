@@ -1,0 +1,70 @@
+# macOS
+.DS_Store
+
+# IDEs and editors
+.idea/
+.vscode/
+*.iml
+.clangd/
+
+# CMake build directories (out-of-source builds)
+/build/
+/cmake-build-*/
+
+# CMake generated files (in-source or stray)
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+CTestTestfile.cmake
+cmake_install.cmake
+DartConfiguration.tcl
+Testing/
+install_manifest.txt
+compile_commands.json
+compile_flags.txt
+CMakeUserPresets.json
+
+# Ninja build files
+.ninja_deps
+.ninja_log
+build.ninja
+
+# Object files and intermediates
+*.o
+*.obj
+*.lo
+*.la
+*.d
+*.gch
+*.pch
+
+# Libraries and binaries (generated)
+*.a
+*.so
+*.so.*
+*.dylib
+*.dll
+*.lib
+*.exe
+*.out
+*.app
+
+# Coverage and profiling
+*.gcda
+*.gcno
+*.gcov
+*.profraw
+*.profdata
+*.coverage
+coverage/
+
+# Editor/OS clutter
+*~
+*.swp
+*.swo
+*.tmp
+*.bak
+.#*
+
+# CMake FetchContent artifacts
+_deps/
