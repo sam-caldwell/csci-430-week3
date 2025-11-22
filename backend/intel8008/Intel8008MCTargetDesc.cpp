@@ -28,6 +28,24 @@ enum { R8RegClassID = ::llvm::R8RegClassID, R16RegClassID = ::llvm::R16RegClassI
 
 namespace intel8008 {
 
+void initMCInstrInfo(llvm::MCInstrInfo &II) {
+  InitIntel8008MCInstrInfo(&II);
+}
+
+std::vector<std::string> getAllInstructionNames() {
+  llvm::MCInstrInfo II;
+  initMCInstrInfo(II);
+  std::vector<std::string> out;
+  const unsigned NOpc = II.getNumOpcodes();
+  out.reserve(NOpc);
+  for (unsigned opc = 0; opc < NOpc; ++opc) {
+    auto N = II.getName(opc);
+    if (!N.empty()) out.emplace_back(N.str());
+  }
+  // Leave names unsorted to match TableGen order (opcodes first, then our insts).
+  return out;
+}
+
 std::vector<std::string> getAllRegisterNames() {
   // Manually map enum order -> human-readable names.
   // Order must match the enum emitted by GET_REGINFO_ENUM.
@@ -57,24 +75,6 @@ std::vector<std::string> getAllRegisterNames() {
   std::vector<std::string> out;
   for (unsigned i = 1; i < sizeof(kNames) / sizeof(kNames[0]); ++i)
     out.emplace_back(kNames[i]);
-  return out;
-}
-
-void initMCInstrInfo(llvm::MCInstrInfo &II) {
-  InitIntel8008MCInstrInfo(&II);
-}
-
-std::vector<std::string> getAllInstructionNames() {
-  llvm::MCInstrInfo II;
-  initMCInstrInfo(II);
-  std::vector<std::string> out;
-  const unsigned NOpc = II.getNumOpcodes();
-  out.reserve(NOpc);
-  for (unsigned opc = 0; opc < NOpc; ++opc) {
-    auto N = II.getName(opc);
-    if (!N.empty()) out.emplace_back(N.str());
-  }
-  // Leave names unsorted to match TableGen order (opcodes first, then our insts).
   return out;
 }
 

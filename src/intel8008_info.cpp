@@ -6,7 +6,7 @@
 int main() {
   using namespace intel8008;
   const auto regs = getAllRegisterNames();
-  auto insn = getAllInstructionNames();
+  const auto insn = getAllInstructionNames();
 
   std::cout << "Intel8008 registers (" << regs.size() << ")\n";
   for (const auto &r : regs) std::cout << "  " << r << "\n";
