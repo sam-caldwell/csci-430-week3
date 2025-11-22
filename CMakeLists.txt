@@ -124,7 +124,7 @@ set(INTEL8008_GEN_HEADERS
 
 add_custom_command(
   OUTPUT ${INTEL8008_GEN_DIR}/Intel8008GenRegisterInfo.inc
-  COMMAND ${LLVM_TBLGEN} -I ${LLVM_INCLUDE_DIRS}
+  COMMAND ${LLVM_TBLGEN} --no-warn-on-unused-template-args -I ${LLVM_INCLUDE_DIRS}
           -gen-register-info -o ${INTEL8008_GEN_DIR}/Intel8008GenRegisterInfo.inc
           ${INTEL8008_TD}
   DEPENDS ${INTEL8008_TD}
@@ -133,7 +133,7 @@ add_custom_command(
 
 add_custom_command(
   OUTPUT ${INTEL8008_GEN_DIR}/Intel8008GenInstrInfo.inc
-  COMMAND ${LLVM_TBLGEN} -I ${LLVM_INCLUDE_DIRS}
+  COMMAND ${LLVM_TBLGEN} --no-warn-on-unused-template-args -I ${LLVM_INCLUDE_DIRS}
           -gen-instr-info -o ${INTEL8008_GEN_DIR}/Intel8008GenInstrInfo.inc
           ${INTEL8008_TD}
   DEPENDS ${INTEL8008_TD}
@@ -142,7 +142,7 @@ add_custom_command(
 
 add_custom_command(
   OUTPUT ${INTEL8008_GEN_DIR}/Intel8008GenAsmWriter.inc
-  COMMAND ${LLVM_TBLGEN} -I ${LLVM_INCLUDE_DIRS}
+  COMMAND ${LLVM_TBLGEN} --no-warn-on-unused-template-args -I ${LLVM_INCLUDE_DIRS}
           -gen-asm-writer -o ${INTEL8008_GEN_DIR}/Intel8008GenAsmWriter.inc
           ${INTEL8008_TD}
   DEPENDS ${INTEL8008_TD}
@@ -151,7 +151,7 @@ add_custom_command(
 
 add_custom_command(
   OUTPUT ${INTEL8008_GEN_DIR}/Intel8008GenDisassemblerTables.inc
-  COMMAND ${LLVM_TBLGEN} -I ${LLVM_INCLUDE_DIRS}
+  COMMAND ${LLVM_TBLGEN} --no-warn-on-unused-template-args -I ${LLVM_INCLUDE_DIRS}
           -gen-disassembler -o ${INTEL8008_GEN_DIR}/Intel8008GenDisassemblerTables.inc
           ${INTEL8008_TD}
   DEPENDS ${INTEL8008_TD}
