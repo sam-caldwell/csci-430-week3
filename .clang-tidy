@@ -1,0 +1,17 @@
+# Clang-Tidy configuration for this repository.
+# Keep default analyzer/diagnostic checks but silence unused template parameter.
+
+Checks: >
+  clang-analyzer-*,
+  clang-diagnostic-*,
+  -clang-diagnostic-unused-template,
+  -clang-diagnostic-unused-template-parameter
+
+# Do not promote warnings to errors here.
+WarningsAsErrors: ''
+
+# Apply to all headers/sources in the repo.
+HeaderFilterRegex: '.*'
+
+# Respect project formatting if .clang-format exists; otherwise no-op.
+FormatStyle: file

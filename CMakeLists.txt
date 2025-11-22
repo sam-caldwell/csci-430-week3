@@ -101,3 +101,80 @@ if(FAKELANG_BUILD_TESTS)
   include(GoogleTest)
   gtest_discover_tests(fakelang_tests)
 endif()
+
+# ----------------------------------------------------------------------------
+# Demo Intel8008 backend (out-of-tree style) using TableGen
+# ----------------------------------------------------------------------------
+
+find_program(LLVM_TBLGEN NAMES llvm-tblgen HINTS ${LLVM_TOOLS_BINARY_DIR})
+if(NOT LLVM_TBLGEN)
+  message(FATAL_ERROR "llvm-tblgen not found. Install LLVM tools (any recent version).")
+endif()
+
+set(INTEL8008_TD ${CMAKE_CURRENT_SOURCE_DIR}/backend/intel8008/Intel8008.td)
+set(INTEL8008_GEN_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated/intel8008)
+file(MAKE_DIRECTORY ${INTEL8008_GEN_DIR})
+
+set(INTEL8008_GEN_HEADERS
+  ${INTEL8008_GEN_DIR}/Intel8008GenRegisterInfo.inc
+  ${INTEL8008_GEN_DIR}/Intel8008GenInstrInfo.inc
+  ${INTEL8008_GEN_DIR}/Intel8008GenAsmWriter.inc
+  ${INTEL8008_GEN_DIR}/Intel8008GenDisassemblerTables.inc
+)
+
+add_custom_command(
+  OUTPUT ${INTEL8008_GEN_DIR}/Intel8008GenRegisterInfo.inc
+  COMMAND ${LLVM_TBLGEN} -I ${LLVM_INCLUDE_DIRS}
+          -gen-register-info -o ${INTEL8008_GEN_DIR}/Intel8008GenRegisterInfo.inc
+          ${INTEL8008_TD}
+  DEPENDS ${INTEL8008_TD}
+  COMMENT "TableGen: Generating Intel8008GenRegisterInfo.inc"
+  VERBATIM)
+
+add_custom_command(
+  OUTPUT ${INTEL8008_GEN_DIR}/Intel8008GenInstrInfo.inc
+  COMMAND ${LLVM_TBLGEN} -I ${LLVM_INCLUDE_DIRS}
+          -gen-instr-info -o ${INTEL8008_GEN_DIR}/Intel8008GenInstrInfo.inc
+          ${INTEL8008_TD}
+  DEPENDS ${INTEL8008_TD}
+  COMMENT "TableGen: Generating Intel8008GenInstrInfo.inc"
+  VERBATIM)
+
+add_custom_command(
+  OUTPUT ${INTEL8008_GEN_DIR}/Intel8008GenAsmWriter.inc
+  COMMAND ${LLVM_TBLGEN} -I ${LLVM_INCLUDE_DIRS}
+          -gen-asm-writer -o ${INTEL8008_GEN_DIR}/Intel8008GenAsmWriter.inc
+          ${INTEL8008_TD}
+  DEPENDS ${INTEL8008_TD}
+  COMMENT "TableGen: Generating Intel8008GenAsmWriter.inc"
+  VERBATIM)
+
+add_custom_command(
+  OUTPUT ${INTEL8008_GEN_DIR}/Intel8008GenDisassemblerTables.inc
+  COMMAND ${LLVM_TBLGEN} -I ${LLVM_INCLUDE_DIRS}
+          -gen-disassembler -o ${INTEL8008_GEN_DIR}/Intel8008GenDisassemblerTables.inc
+          ${INTEL8008_TD}
+  DEPENDS ${INTEL8008_TD}
+  COMMENT "TableGen: Generating Intel8008GenDisassemblerTables.inc"
+  VERBATIM)
+
+
+add_custom_target(intel8008_tablegen DEPENDS ${INTEL8008_GEN_HEADERS})
+
+add_library(intel8008_backend STATIC
+  backend/intel8008/Intel8008MCTargetDesc.h
+  backend/intel8008/Intel8008MCTargetDesc.cpp
+  ${INTEL8008_GEN_HEADERS}
+)
+add_dependencies(intel8008_backend intel8008_tablegen)
+target_include_directories(intel8008_backend PUBLIC
+  ${CMAKE_CURRENT_SOURCE_DIR}/backend/intel8008
+  ${INTEL8008_GEN_DIR}
+)
+target_include_directories(intel8008_backend SYSTEM PUBLIC ${LLVM_INCLUDE_DIRS})
+target_link_libraries(intel8008_backend PRIVATE LLVMSupport LLVMMC)
+target_compile_options(intel8008_backend PRIVATE -Wall -Wextra -Wpedantic)
+
+add_executable(intel8008-info src/intel8008_info.cpp)
+target_link_libraries(intel8008-info PRIVATE intel8008_backend)
+target_include_directories(intel8008-info SYSTEM PRIVATE ${LLVM_INCLUDE_DIRS})

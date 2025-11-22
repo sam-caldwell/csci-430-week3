@@ -2,10 +2,15 @@
 # Targets:
 #   make configure  - configure CMake into $(BUILD_DIR)
 #   make build      - build using CMake in $(BUILD_DIR)
+#   make test       - run all tests via CTest in $(BUILD_DIR)
 #   make clean      - remove $(BUILD_DIR)
 #   make zip        - create repo zip excluding $(BUILD_DIR)/, .git/, cmake-build-*/
 
-.PHONY: all configure build clean zip demo
+.PHONY: all configure build test clean zip demo
+# Avoid parallelizing Makefile targets; Ninja handles build parallelism.
+# Prevents races like `make clean configure build -j` removing $(BUILD_DIR)
+# while CMake/ctest operate on it.
+.NOTPARALLEL:
 
 BUILD_DIR ?= build
 GENERATOR ?= Ninja
@@ -18,7 +23,7 @@ BUILD_ARGS ?=
 # Zip output name (override with `make zip ZIP_FILE=name.zip`)
 ZIP_FILE ?= repo.zip
 
-all: build
+all: clean configure build demo
 
 configure:
 	@mkdir -p "$(BUILD_DIR)"
@@ -39,6 +44,11 @@ configure:
 build:
 	@[ -f "$(BUILD_DIR)/CMakeCache.txt" ] || $(MAKE) configure
 	@cmake --build "$(BUILD_DIR)" -- $(BUILD_ARGS)
+
+# Build (if needed) and run all tests
+test: build
+	@echo "Running tests in $(BUILD_DIR)"
+	@ctest --test-dir "$(BUILD_DIR)" --output-on-failure
 
 # Build the compiler and compile the demo source to LLVM IR
 demo: build
